@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <!-- Firebase App is always required and must be first -->
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-app.js"></script> 
+    
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-database.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-firestore.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-messaging.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-functions.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Loan Application</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/grayscale.min.css" rel="stylesheet">
+
+    <script>
+  var config = {
+    // ...
+  };
+  firebase.initializeApp(config);
+</script>
+  </head>  
+
+  <body id="page-top">
+
+
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#signup">Register</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Intro Header -->
+    <header class="masthead">
+      <div class="intro-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              {% if message %}
+                <p ><strong> {{ message }} </strong></p>
+               {% endif %}
+               {% if error %}
+                 <p class=error><strong>Error:</strong> {{ error }}
+                {% endif %} 
+              <h1 class="brand-heading">Loan Application</h1>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+
+    <!-- Login Section -->
+    <section id="login" class="download-section content-section text-center">
+      <div class="container">
+        <div class="col-lg-8 mx-auto">
+          <h2>Login</h2>
+             <div id="formio"></div> 
+             <script src="https://unpkg.com/formiojs@latest/dist/formio.full.min.js"></script>
+             <script>
+                    Formio.createForm(document.getElementById('formio'), 'https://dyobxntebamkcxu.form.io/user/login', {noAlerts : true} )
+  .then(function(form) {
+    // Prevent the submission from going to the form.io server.
+    form.nosubmit = true;
+
+    // Triggered when they click the submit button.
+    form.on('submit', function(submission) {
+      console.log(submission);
+      return fetch('/login', {
+          body: JSON.stringify(submission),
+          headers: {
+            'content-type': 'application/json'
+          },
+          method: 'POST',
+          mode: 'cors',
+        }).then(function(res){ console.log(res)
+          if (res.status == 500 ){ window.location = '/?error="+invalid username/password+"'}
+                                else if (res.status == 200) { window.location = 'welcome.html'}})    
+     });
+        
+  });
+        </script> 
+        </div>
+      </div>
+    </section>
+
+    <!-- Register Section -->
+    <section id="signup" class="download-section content-section text-center">
+      <div class="container">
+        <div class="col-lg-8 mx-auto">
+          <h2>Register</h2>
+ <div id="formio1"></div> 
+             <script src="https://unpkg.com/formiojs@latest/dist/formio.full.min.js"></script>
+             <script>
+                    Formio.createForm(document.getElementById('formio1'), 'https://dyobxntebamkcxu.form.io/user/register', {noAlerts : true} )
+  .then(function(form) {
+    // Prevent the submission from going to the form.io server.
+    form.nosubmit = true;
+
+    // Triggered when they click the submit button.
+    form.on('submit', function(submission) {
+      console.log(submission);
+      return fetch('/register', {
+          body: JSON.stringify(submission),
+          headers: {
+            'content-type': 'application/json'
+          },
+          method: 'POST',
+          mode: 'cors',
+        }).then(function(res){ console.log(res)
+          if (res.status == 500 ){ window.location = '/?error="+Internal error+"'}
+                                else if (res.status == 200) { window.location = '/?message="+Successfully registered.Please login to continue +"'}})    
+     });
+        
+  });
+  </script>        
+        </div>
+      </div>
+    </section>    
+
+    <!-- Footer -->
+    <footer>
+      <div class="container text-center">
+        <p>Copyright &copy; Your Website 2018</p>
+      </div>
+    </footer>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyC6dE8A94XUlvlVAMJ_h8bzS_uFNn2NM4U",
+    authDomain: "gcptrial-205123.firebaseapp.com",
+    databaseURL: "https://gcptrial-205123.firebaseio.com",
+    projectId: "gcptrial-205123",
+    storageBucket: "gcptrial-205123.appspot.com",
+    messagingSenderId: "455533234316"
+  };
+  firebase.initializeApp(config);
+</script>
+
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="js/grayscale.min.js"></script>
+
+  </body>
+
+</html>

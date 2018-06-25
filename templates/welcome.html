@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Loan Application</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/grayscale.min.css" rel="stylesheet"> 
+ </head>
+  <body id="page-top">
+    <!-- Login Section -->
+    <section id="login" class="download-section content-section text-center">
+      <div class="container">
+        <div class="col-lg-8 mx-auto">
+          <h2>User Details</h2>
+            {% if message is defined %}
+                <p> {{ message }} </p>
+            {% endif %}    
+            
+            <div id="formio1"></div>               
+            <script src="https://unpkg.com/formiojs@latest/dist/formio.full.min.js"></script> 
+           <script>
+      Formio.createForm(document.getElementById('formio1'), 'https://dyobxntebamkcxu.form.io/userdetails', {noAlerts : true})
+  .then(function(form) {
+    // Prevent the submission from going to the form.io server.
+    form.nosubmit = true;
+    
+    // Triggered when they click the submit button.
+    form.on('submit', function(submission) {
+      console.log(submission);
+
+      return fetch('/desc', {
+          body: JSON.stringify(submission),
+          headers: {
+            'content-type': 'application/json'
+          },
+          method: 'POST',
+          mode: 'cors',
+        }).then(function(res){ 
+          if (res.status == 500 ){ window.location = 'http://127.0.0.1:8080/?error="Internal error"'}
+           else if(res.status == 200){ alert("Data Submitted")
+                    form.submission = {
+                    data: {
+                      
+                      firstName: submission.firstName,
+                      lastName: submission.lastName,
+                      address : submission.address,
+                      phonenumber: submission.phonenumber,
+                      salary : submission.salary,
+                      description: submission.description,
+                      signature : submission.signature
+                    }
+                  };}   
+        })
+        
+    });
+  }); 
+      </script>  
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container text-center">
+        <p>Copyright &copy; Your Website 2018</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="js/grayscale.min.js"></script>
+
+  </body>
+
+</html>
